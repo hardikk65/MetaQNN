@@ -30,7 +30,7 @@ from helper import *
 '''
 
 
-# TODO Calculate image_size while transitioning from state A to B.
+# TODO resolve no transition error
 
 
 
@@ -75,19 +75,27 @@ class State:
 class transitions:
 
     def __init__(self,A:State):
+        self.A = A
         self.layer_type = A.layer_type
         self.kernel_size = A.kernel_size
         self.channels = A.channels
         self.strides = A.strides
+
         self.image_size = A.image_size
+        if(self.layer_type == 'Conv' or self.layer_type == 'Pool'):
+            self.image_size = calculate_image_size(self.image_size,self.kernel_size,self.strides)
+
         self.layer_depth = A.layer_depth
         self.neurons = A.neurons
         self.fc_layers = A.fc_layers
+
+        self._data = load_data()
 
     
     def possible_transitions(self):
         
         all_transitions = []
+        q_values = []
         if self.layer_depth == 11 or self.fc_layers == 2:
             all_transitions.append(
                 State("SM",kernel_size=-1,channels=-1,strides=-1,image_size=-1,layer_depth=self.layer_depth + 1,neurons=0,fc_layers=self.fc_layers)
@@ -157,8 +165,16 @@ class transitions:
                 all_transitions.append(
                 State("SM",kernel_size=-1,channels=-1,strides=-1,image_size=-1,layer_depth=self.layer_depth + 1,neurons=0,fc_layers=0)
                 )
+
         
-        return all_transitions
+
+        
+        for states in all_transitions:
+            for end_state,utils in zip(self._data.loc[self._data['Start-State'] == self.A.__repr__()]['End-State'],self._data.loc[self._data['Start-State'] == self.A.__repr__()]['Utility']):
+                if end_state == states.__repr__():
+                    q_values.append(utils)
+        
+        return all_transitions,q_values
     
 
 
