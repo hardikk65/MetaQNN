@@ -15,6 +15,6 @@ epsilon = 1
 
 
 # Image Parameters
-input_channels = 3
+input_channels = 1
 image_size = 32
 classes = 10

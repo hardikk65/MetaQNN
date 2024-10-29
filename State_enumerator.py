@@ -123,7 +123,7 @@ class transitions:
 
                 # Conv to fc Transition
 
-                if (self.fc_layers < 2) and (pool_size(self.image_size) < 8 and pool_size(self.image_size) >= 4):
+                if (self.fc_layers < 2) or (pool_size(self.image_size) < 8 and pool_size(self.image_size) >= 4):
                     for neurons in ssp.neurons:
 
                         if self.neurons <= neurons:
@@ -178,16 +178,7 @@ class transitions:
     
 
 
-# input_state = State(layer_type = "fc",kernel_size=1,channels = 64,strides = 1,image_size=8,layer_depth=1,neurons=512,fc_layers=0)
 
-
-# transition = transitions(input_state)
-
-# actions = transition.possible_transitions()
-
-
-# for states in actions:
-#     print(states)
                     
 
 

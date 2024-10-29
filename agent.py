@@ -18,6 +18,9 @@ class agent:
             alpha = random.uniform(0,1)
 
             all_actions,q_values = transitions(self.state_sequence[-1]).possible_transitions()  
+
+            if(len(all_actions) == 0):
+                return self.state_sequence
             # TODO resolve no transition error in state_enumerator
             if alpha > ssp.epsilon:
                 actions = max(q_values)
